@@ -486,6 +486,7 @@
                   emit-value
                   map-options
                   use-chips
+                  @update:model-value="alCambiarReparaciones()"
                   :options="[
                     'Cambio de pantalla',
                     'Cambio de batería',
@@ -499,6 +500,23 @@
                     (val) =>
                       (Array.isArray(val) && val.length > 0) ||
                       'Seleccione al menos una reparación',
+                  ]"
+                />
+
+                <q-input
+                  v-if="
+                    Array.isArray(servicio.reparacion) &&
+                    servicio.reparacion.includes('Otros')
+                  "
+                  v-model="servicio.reparacionOtra"
+                  label="¿Cuál(es) reparación(es)? *"
+                  outlined
+                  dense
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) ||
+                      'Describa la reparación',
                   ]"
                 />
 
@@ -819,6 +837,7 @@ function nuevoServicioVacio() {
     marcaOtra: "",
     modelo: "",
     reparacion: [],
+    reparacionOtra: "",
     tecnico: "",
     fecha: "",
     hora: "",
@@ -880,6 +899,9 @@ function editarServicio(servicioGuardado) {
     : copia.reparacion
     ? [copia.reparacion]
     : [];
+  if (copia.reparacionOtra === undefined) {
+    copia.reparacionOtra = "";
+  }
   servicio.value = copia;
   idEditando.value = servicioGuardado.id;
   estadoEquipoAnterior = servicio.value.estadoEquipo;
@@ -909,6 +931,14 @@ function eliminarServicio() {
 function alCambiarEstadoPago() {
   if (servicio.value.estadoPago !== "Abono") {
     servicio.value.abono = null;
+  }
+}
+
+/* Al quitar "Otros" de las reparaciones, se limpia el texto libre */
+function alCambiarReparaciones() {
+  const lista = servicio.value.reparacion;
+  if (!Array.isArray(lista) || !lista.includes("Otros")) {
+    servicio.value.reparacionOtra = "";
   }
 }
 
@@ -956,10 +986,17 @@ function seMuestra(s) {
 }
 
 function reparacionesTexto(s) {
-  if (Array.isArray(s.reparacion)) {
-    return s.reparacion.join(", ") || "Sin reparación";
+  const lista = Array.isArray(s.reparacion)
+    ? s.reparacion
+    : s.reparacion
+    ? [s.reparacion]
+    : [];
+  if (lista.length === 0) {
+    return "Sin reparación";
   }
-  return s.reparacion || "Sin reparación";
+  return lista
+    .map((r) => (r === "Otros" && s.reparacionOtra ? s.reparacionOtra : r))
+    .join(", ");
 }
 
 function marcaFinal(s) {
