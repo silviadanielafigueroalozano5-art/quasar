@@ -5,8 +5,12 @@
       <q-toolbar class="q-py-md">
         <q-icon name="smartphone" size="32px" class="q-mr-sm" />
         <div>
-          <div class="text-h5 text-weight-bold">Servicio Técnico Don Efraín</div>
-          <div class="text-caption text-grey-3">Gestión de equipos en reparación</div>
+          <div class="text-h5 text-weight-bold">
+            Servicio Técnico Don Efraín
+          </div>
+          <div class="text-caption text-grey-3">
+            Gestión de equipos en reparación
+          </div>
         </div>
         <q-space />
         <q-btn
@@ -26,16 +30,25 @@
 
     <q-page-container>
       <q-page class="bg-gradient-light q-py-lg">
-        <div class="q-px-lg q-mx-auto" style="max-width: 1400px">
+        <div class="q-px-lg full-width">
           <!-- ===== RESUMEN RÁPIDO MEJORADO ===== -->
           <div class="row q-col-gutter-lg q-mb-xl">
             <!-- Tarjeta Total de Servicios -->
             <div class="col-12 col-sm-6 col-md-3">
-              <q-card flat class="card-resumen bg-teal-1 text-teal-9 shadow-hover">
+              <q-card
+                flat
+                class="card-resumen bg-teal-1 text-teal-9 shadow-hover"
+              >
                 <q-card-section class="q-pt-lg">
                   <div class="text-center">
-                    <q-icon name="folder_open" size="40px" class="q-mb-md text-teal-8" />
-                    <div class="text-h4 text-weight-bold">{{ servicios.length }}</div>
+                    <q-icon
+                      name="folder_open"
+                      size="40px"
+                      class="q-mb-md text-teal-8"
+                    />
+                    <div class="text-h4 text-weight-bold">
+                      {{ servicios.length }}
+                    </div>
                     <div class="text-subtitle2">Total de Servicios</div>
                   </div>
                 </q-card-section>
@@ -44,11 +57,20 @@
 
             <!-- Tarjeta Sin Entregar -->
             <div class="col-12 col-sm-6 col-md-3">
-              <q-card flat class="card-resumen bg-orange-1 text-orange-9 shadow-hover">
+              <q-card
+                flat
+                class="card-resumen bg-orange-1 text-orange-9 shadow-hover"
+              >
                 <q-card-section class="q-pt-lg">
                   <div class="text-center">
-                    <q-icon name="schedule" size="40px" class="q-mb-md text-orange-8" />
-                    <div class="text-h4 text-weight-bold">{{ contarSinEntregar() }}</div>
+                    <q-icon
+                      name="schedule"
+                      size="40px"
+                      class="q-mb-md text-orange-8"
+                    />
+                    <div class="text-h4 text-weight-bold">
+                      {{ contarSinEntregar() }}
+                    </div>
                     <div class="text-subtitle2">Sin Entregar</div>
                   </div>
                 </q-card-section>
@@ -57,11 +79,20 @@
 
             <!-- Tarjeta Pagos Pendientes -->
             <div class="col-12 col-sm-6 col-md-3">
-              <q-card flat class="card-resumen bg-red-1 text-red-9 shadow-hover">
+              <q-card
+                flat
+                class="card-resumen bg-red-1 text-red-9 shadow-hover"
+              >
                 <q-card-section class="q-pt-lg">
                   <div class="text-center">
-                    <q-icon name="warning" size="40px" class="q-mb-md text-red-8" />
-                    <div class="text-h4 text-weight-bold">{{ contarPagoPendiente() }}</div>
+                    <q-icon
+                      name="warning"
+                      size="40px"
+                      class="q-mb-md text-red-8"
+                    />
+                    <div class="text-h4 text-weight-bold">
+                      {{ contarPagoPendiente() }}
+                    </div>
                     <div class="text-subtitle2">Pagos Pendientes</div>
                   </div>
                 </q-card-section>
@@ -70,11 +101,20 @@
 
             <!-- Tarjeta Recaudado -->
             <div class="col-12 col-sm-6 col-md-3">
-              <q-card flat class="card-resumen bg-green-1 text-green-9 shadow-hover">
+              <q-card
+                flat
+                class="card-resumen bg-green-1 text-green-9 shadow-hover"
+              >
                 <q-card-section class="q-pt-lg">
                   <div class="text-center">
-                    <q-icon name="trending_up" size="40px" class="q-mb-md text-green-8" />
-                    <div class="text-h4 text-weight-bold">${{ totalRecaudado() }}</div>
+                    <q-icon
+                      name="trending_up"
+                      size="40px"
+                      class="q-mb-md text-green-8"
+                    />
+                    <div class="text-h4 text-weight-bold">
+                      ${{ totalRecaudado() }}
+                    </div>
                     <div class="text-subtitle2">Recaudado</div>
                   </div>
                 </q-card-section>
@@ -122,10 +162,16 @@
           </div>
 
           <!-- ===== MENSAJE CUANDO NO HAY NADA ===== -->
-          <q-card v-if="servicios.length === 0" flat class="q-pa-xl text-center text-grey-7 shadow-1">
+          <q-card
+            v-if="servicios.length === 0"
+            flat
+            class="q-pa-xl text-center text-grey-7 shadow-1"
+          >
             <q-icon name="inbox" size="64px" class="q-mb-md text-grey-5" />
             <div class="text-h6">Todavía no hay servicios registrados</div>
-            <div class="text-subtitle2 q-mt-sm">Toque el botón + para registrar el primer equipo</div>
+            <div class="text-subtitle2 q-mt-sm">
+              Toque el botón + para registrar el primer equipo
+            </div>
           </q-card>
 
           <!-- ===== TARJETAS DE SERVICIOS MEJORADAS ===== -->
@@ -150,9 +196,18 @@
                       size="32px"
                     />
                     <div class="col">
-                      <div class="text-h6 text-weight-bold" style="line-height: 1.2">{{ s.equipo }}</div>
-                      <div class="text-caption text-grey-7">{{ s.cliente }}</div>
-                      <div v-if="s.telefono" class="text-caption text-grey-6">{{ s.telefono }}</div>
+                      <div
+                        class="text-h6 text-weight-bold"
+                        style="line-height: 1.2"
+                      >
+                        {{ marcaFinal(s) }} {{ s.modelo }}
+                      </div>
+                      <div class="text-caption text-grey-7">
+                        {{ s.cliente }}
+                      </div>
+                      <div v-if="s.telefono" class="text-caption text-grey-6">
+                        {{ s.telefono }}
+                      </div>
                     </div>
                     <q-badge
                       :color="colorEstadoEquipo(s.estadoEquipo)"
@@ -168,22 +223,35 @@
                 <q-card-section class="q-py-md">
                   <div class="row q-col-gutter-md">
                     <div class="col-6">
-                      <div class="text-caption text-grey-8 text-weight-bold">REPARACIÓN</div>
+                      <div class="text-caption text-grey-8 text-weight-bold">
+                        REPARACIÓN
+                      </div>
                       <div class="text-body2">{{ s.reparacion }}</div>
                     </div>
                     <div class="col-6">
-                      <div class="text-caption text-grey-8 text-weight-bold">TÉCNICO</div>
+                      <div class="text-caption text-grey-8 text-weight-bold">
+                        TÉCNICO
+                      </div>
                       <div class="text-body2">{{ s.tecnico }}</div>
                     </div>
                   </div>
-                  
+
                   <div class="row q-col-gutter-md q-mt-sm">
                     <div class="col-6">
-                      <div class="text-caption text-grey-8 text-weight-bold">FECHA</div>
-                      <div class="text-body2">{{ formatearFecha(s.fecha) }}</div>
+                      <div class="text-caption text-grey-8 text-weight-bold">
+                        FECHA
+                      </div>
+                      <div class="text-body2">
+                        {{ formatearFecha(s.fecha) }}
+                      </div>
                     </div>
                     <div class="col-6">
-                      <div v-if="s.hora" class="text-caption text-grey-8 text-weight-bold">HORA</div>
+                      <div
+                        v-if="s.hora"
+                        class="text-caption text-grey-8 text-weight-bold"
+                      >
+                        HORA
+                      </div>
                       <div v-if="s.hora" class="text-body2">{{ s.hora }}</div>
                     </div>
                   </div>
@@ -191,9 +259,15 @@
                   <!-- Precio destacado -->
                   <q-separator class="q-my-md" />
                   <div class="text-center q-py-sm bg-grey-1 rounded-borders">
-                    <div class="text-caption text-grey-8 text-weight-bold">PRECIO</div>
-                    <div class="text-h5 text-weight-bold text-teal-8">${{ s.precio }}</div>
-                    <div class="text-caption text-grey-7">{{ s.metodoPago }}</div>
+                    <div class="text-caption text-grey-8 text-weight-bold">
+                      PRECIO
+                    </div>
+                    <div class="text-h5 text-weight-bold text-teal-8">
+                      ${{ s.precio }}
+                    </div>
+                    <div class="text-caption text-grey-7">
+                      {{ s.metodoPago }}
+                    </div>
                   </div>
                 </q-card-section>
 
@@ -201,7 +275,11 @@
 
                 <!-- Estado del Pago -->
                 <q-card-section class="q-py-md">
-                  <div class="text-caption text-grey-8 text-weight-bold q-mb-sm">ESTADO DE PAGO</div>
+                  <div
+                    class="text-caption text-grey-8 text-weight-bold q-mb-sm"
+                  >
+                    ESTADO DE PAGO
+                  </div>
                   <div class="row q-col-gutter-sm items-center">
                     <div class="col-auto">
                       <q-chip
@@ -230,7 +308,10 @@
                       />
                     </div>
                   </div>
-                  <div v-if="s.estadoPago === 'Abono'" class="text-caption text-orange-9 q-mt-xs">
+                  <div
+                    v-if="s.estadoPago === 'Abono'"
+                    class="text-caption text-orange-9 q-mt-xs"
+                  >
                     ↳ Falta: ${{ s.precio - s.abono }}
                   </div>
                 </q-card-section>
@@ -246,9 +327,20 @@
                 </q-banner>
 
                 <!-- Calificación y Observaciones -->
-                <q-card-section v-if="s.estadoEquipo === 'Entregado' || s.calificacion > 0 || s.observaciones" class="q-pt-none">
+                <q-card-section
+                  v-if="
+                    s.estadoEquipo === 'Entregado' ||
+                    s.calificacion > 0 ||
+                    s.observaciones
+                  "
+                  class="q-pt-none"
+                >
                   <div v-if="s.calificacion > 0" class="q-mb-sm">
-                    <div class="text-caption text-grey-8 text-weight-bold q-mb-xs">CALIFICACIÓN</div>
+                    <div
+                      class="text-caption text-grey-8 text-weight-bold q-mb-xs"
+                    >
+                      CALIFICACIÓN
+                    </div>
                     <q-rating
                       :model-value="s.calificacion"
                       :max="5"
@@ -259,7 +351,10 @@
                       readonly
                     />
                   </div>
-                  <div v-if="s.observaciones" class="text-caption bg-grey-2 q-pa-sm rounded-borders">
+                  <div
+                    v-if="s.observaciones"
+                    class="text-caption bg-grey-2 q-pa-sm rounded-borders"
+                  >
                     <strong>Notas:</strong> {{ s.observaciones }}
                   </div>
                 </q-card-section>
@@ -294,7 +389,11 @@
         <q-dialog v-model="mostrarModal" persistent>
           <q-card style="width: 520px; max-width: 95vw">
             <q-card-section class="bg-teal-8 text-white row items-center">
-              <q-icon :name="idEditando === null ? 'add_circle' : 'edit'" size="24px" class="q-mr-sm" />
+              <q-icon
+                :name="idEditando === null ? 'add_circle' : 'edit'"
+                size="24px"
+                class="q-mr-sm"
+              />
               <div class="text-h6">
                 <span v-if="idEditando === null">Nuevo servicio</span>
                 <span v-else>Editar servicio</span>
@@ -304,7 +403,10 @@
             </q-card-section>
 
             <q-form @submit="guardarServicio()">
-              <q-card-section style="max-height: 62vh" class="scroll q-gutter-y-sm">
+              <q-card-section
+                style="max-height: 62vh"
+                class="scroll q-gutter-y-sm"
+              >
                 <q-input
                   v-model="servicio.cliente"
                   label="Nombre del cliente *"
@@ -312,7 +414,9 @@
                   dense
                   lazy-rules
                   :rules="[
-                    (val) => (val && val.trim().length > 0) || 'Escriba el nombre del cliente',
+                    (val) =>
+                      (val && val.trim().length > 0) ||
+                      'Escriba el nombre del cliente',
                     (val) => val.trim().length >= 3 || 'Mínimo 3 caracteres',
                   ]"
                 />
@@ -326,13 +430,42 @@
                   hint="Opcional, para avisar cuando esté listo"
                 />
 
+                <q-select
+                  v-model="servicio.marca"
+                  label="Marca del equipo *"
+                  outlined
+                  dense
+                  :options="marcas"
+                  behavior="dialog"
+                  menu-anchor="bottom middle"
+                  menu-self="top middle"
+                  :rules="[(val) => !!val || 'Seleccione la marca']"
+                />
+
                 <q-input
-                  v-model="servicio.equipo"
-                  label="Marca y modelo del equipo *"
+                  v-if="servicio.marca === 'Otra'"
+                  v-model="servicio.marcaOtra"
+                  label="¿Cuál marca? *"
                   outlined
                   dense
                   lazy-rules
-                  :rules="[(val) => (val && val.trim().length > 0) || 'Indique marca y modelo']"
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) || 'Escriba la marca',
+                    (val) => val.trim().length >= 2 || 'Mínimo 2 caracteres',
+                  ]"
+                />
+
+                <q-input
+                  v-model="servicio.modelo"
+                  label="Modelo del equipo *"
+                  outlined
+                  dense
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) || 'Indique el modelo',
+                  ]"
                 />
 
                 <q-select
@@ -351,7 +484,9 @@
                     'Cambio de flex',
                     'Otros',
                   ]"
-                  :rules="[(val) => !!val || 'Seleccione el tipo de reparación']"
+                  :rules="[
+                    (val) => !!val || 'Seleccione el tipo de reparación',
+                  ]"
                 />
 
                 <q-select
@@ -374,7 +509,11 @@
                       :rules="[(val) => !!val || 'Elija la fecha']"
                     >
                       <template v-slot:append>
-                        <q-icon name="event" class="cursor-pointer" @click="mostrarCalendario = true" />
+                        <q-icon
+                          name="event"
+                          class="cursor-pointer"
+                          @click="mostrarCalendario = true"
+                        />
                       </template>
                     </q-input>
                   </div>
@@ -388,7 +527,11 @@
                       :rules="[(val) => !!val || 'Elija la hora']"
                     >
                       <template v-slot:append>
-                        <q-icon name="access_time" class="cursor-pointer" @click="mostrarReloj = true" />
+                        <q-icon
+                          name="access_time"
+                          class="cursor-pointer"
+                          @click="mostrarReloj = true"
+                        />
                       </template>
                     </q-input>
                   </div>
@@ -422,9 +565,11 @@
                   prefix="$"
                   lazy-rules
                   :rules="[
-                    (val) => (val !== null && val !== '') || 'Escriba el precio',
+                    (val) =>
+                      (val !== null && val !== '') || 'Escriba el precio',
                     (val) => val > 0 || 'El precio debe ser mayor a $0',
-                    (val) => val <= 5000000 || 'Verifique el precio, parece muy alto',
+                    (val) =>
+                      val <= 5000000 || 'Verifique el precio, parece muy alto',
                   ]"
                 />
 
@@ -457,9 +602,13 @@
                   prefix="$"
                   lazy-rules
                   :rules="[
-                    (val) => (val !== null && val !== '') || 'Escriba el valor del abono',
+                    (val) =>
+                      (val !== null && val !== '') ||
+                      'Escriba el valor del abono',
                     (val) => val > 0 || 'El abono debe ser mayor a $0',
-                    (val) => val < servicio.precio || 'El abono debe ser menor al precio total',
+                    (val) =>
+                      val < servicio.precio ||
+                      'El abono debe ser menor al precio total',
                   ]"
                 />
 
@@ -468,25 +617,15 @@
                   label="Estado del equipo *"
                   outlined
                   dense
-                  :options="['Recibido', 'En reparación', 'Listo para entregar', 'Entregado']"
+                  :options="[
+                    'Recibido',
+                    'En reparación',
+                    'Listo para entregar',
+                    'Entregado',
+                  ]"
                   :rules="[(val) => !!val || 'Seleccione el estado del equipo']"
                   @update:model-value="alCambiarEstadoEquipo()"
                 />
-
-                <div v-if="servicio.estadoEquipo === 'Entregado'" class="q-pa-sm bg-grey-2 rounded-borders">
-                  <div class="text-subtitle2 q-mb-xs">Calificación del cliente</div>
-                  <q-rating
-                    v-model="servicio.calificacion"
-                    :max="5"
-                    size="2em"
-                    color="orange"
-                    icon="star_border"
-                    icon-selected="star"
-                  />
-                  <div class="text-caption text-grey-8">
-                    Se registra cuando el cliente recoge el equipo.
-                  </div>
-                </div>
 
                 <q-input
                   v-model="servicio.observaciones"
@@ -504,8 +643,19 @@
               <q-separator />
 
               <q-card-actions align="right">
-                <q-btn flat label="Cancelar" color="grey-8" @click="cerrarModal()" />
-                <q-btn unelevated type="submit" color="teal-8" icon="save" label="Guardar" />
+                <q-btn
+                  flat
+                  label="Cancelar"
+                  color="grey-8"
+                  @click="cerrarModal()"
+                />
+                <q-btn
+                  unelevated
+                  type="submit"
+                  color="teal-8"
+                  icon="save"
+                  label="Guardar"
+                />
               </q-card-actions>
             </q-form>
           </q-card>
@@ -515,15 +665,71 @@
         <q-dialog v-model="mostrarConfirmacionEliminar">
           <q-card style="width: 380px; max-width: 90vw">
             <q-card-section class="row items-center">
-              <q-avatar icon="delete_forever" color="negative" text-color="white" />
+              <q-avatar
+                icon="delete_forever"
+                color="negative"
+                text-color="white"
+              />
               <div class="q-ml-md">
-                <div class="text-subtitle1 text-weight-bold">¿Eliminar este servicio?</div>
-                <div class="text-caption text-grey-8">Esta acción no se puede deshacer.</div>
+                <div class="text-subtitle1 text-weight-bold">
+                  ¿Eliminar este servicio?
+                </div>
+                <div class="text-caption text-grey-8">
+                  Esta acción no se puede deshacer.
+                </div>
               </div>
             </q-card-section>
             <q-card-actions align="right">
-              <q-btn flat label="Cancelar" color="grey-8" @click="mostrarConfirmacionEliminar = false" />
-              <q-btn unelevated label="Sí, eliminar" color="negative" @click="eliminarServicio()" />
+              <q-btn
+                flat
+                label="Cancelar"
+                color="grey-8"
+                @click="mostrarConfirmacionEliminar = false"
+              />
+              <q-btn
+                unelevated
+                label="Sí, eliminar"
+                color="negative"
+                @click="eliminarServicio()"
+              />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
+
+        <!-- ===== CALIFICACIÓN CUANDO EL EQUIPO SE ENTREGA ===== -->
+        <q-dialog v-model="mostrarCalificacion" persistent>
+          <q-card style="width: 380px; max-width: 90vw">
+            <q-card-section class="bg-teal-8 text-white row items-center">
+              <q-icon name="reviews" size="24px" class="q-mr-sm" />
+              <div class="text-h6">Califique el servicio</div>
+            </q-card-section>
+            <q-card-section class="text-center">
+              <div class="text-subtitle1 q-mb-sm">
+                ¿Cómo evalúa el cliente el servicio?
+              </div>
+              <q-rating
+                v-model="calificacionTemporal"
+                :max="5"
+                size="3em"
+                color="orange"
+                icon="star_border"
+                icon-selected="star"
+              />
+            </q-card-section>
+            <q-card-actions align="right">
+              <q-btn
+                flat
+                label="Omitir"
+                color="grey-8"
+                @click="guardarCalificacion(false)"
+              />
+              <q-btn
+                unelevated
+                label="Guardar"
+                color="teal-8"
+                icon="check"
+                @click="guardarCalificacion(true)"
+              />
             </q-card-actions>
           </q-card>
         </q-dialog>
@@ -549,14 +755,37 @@ const idEliminar = ref(null);
 const busqueda = ref("");
 const filtroEstado = ref("Todos");
 
+/* ===== MARCAS ===== */
+const marcas = [
+  "Samsung",
+  "Apple",
+  "Xiaomi",
+  "Redmi",
+  "Huawei",
+  "Motorola",
+  "Nokia",
+  "Alcatel",
+  "ZTE",
+  "Oppo",
+  "Realme",
+  "LG",
+  "Sony",
+  "Honor",
+  "Otra",
+];
+
 /* ===== FORMULARIO ===== */
 const servicio = ref(nuevoServicioVacio());
+const mostrarCalificacion = ref(false);
+const calificacionTemporal = ref(0);
 
 function nuevoServicioVacio() {
   return {
     cliente: "",
     telefono: "",
-    equipo: "",
+    marca: "",
+    marcaOtra: "",
+    modelo: "",
     reparacion: "",
     tecnico: "",
     fecha: "",
@@ -565,7 +794,7 @@ function nuevoServicioVacio() {
     metodoPago: "",
     estadoPago: "",
     abono: null,
-    estadoEquipo: "",
+    estadoEquipo: "Recibido",
     calificacion: 0,
     observaciones: "",
   };
@@ -622,23 +851,39 @@ function alCambiarEstadoPago() {
 }
 
 function alCambiarEstadoEquipo() {
-  if (servicio.value.estadoEquipo !== "Entregado") {
+  if (servicio.value.estadoEquipo === "Entregado") {
+    calificacionTemporal.value = servicio.value.calificacion || 0;
+    mostrarCalificacion.value = true;
+  } else {
     servicio.value.calificacion = 0;
   }
+}
+
+function guardarCalificacion(conNota) {
+  servicio.value.calificacion = conNota ? calificacionTemporal.value : 0;
+  mostrarCalificacion.value = false;
 }
 
 /* ===== BUSCADOR Y FILTRO (sin computed) ===== */
 function seMuestra(s) {
   const texto = (busqueda.value || "").toLowerCase().trim();
+  const marcaModelo = (marcaFinal(s) + " " + s.modelo).toLowerCase();
   const coincideTexto =
     texto === "" ||
     s.cliente.toLowerCase().includes(texto) ||
-    s.equipo.toLowerCase().includes(texto);
+    marcaModelo.includes(texto);
 
   const coincideEstado =
     filtroEstado.value === "Todos" || s.estadoEquipo === filtroEstado.value;
 
   return coincideTexto && coincideEstado;
+}
+
+function marcaFinal(s) {
+  if (s.marca === "Otra" && s.marcaOtra) {
+    return s.marcaOtra;
+  }
+  return s.marca;
 }
 
 /* ===== INDICADORES ===== */
@@ -726,6 +971,13 @@ function formatearFecha(fecha) {
 }
 </script>
 
+<style>
+/* Evita que el scroll del menú de opciones arrastre al modal de atrás */
+.q-menu {
+  overscroll-behavior: contain;
+}
+</style>
+
 <style scoped>
 /* ===== GRADIENTES ===== */
 .bg-gradient {
@@ -805,7 +1057,7 @@ function formatearFecha(fecha) {
     padding-left: 12px;
     padding-right: 12px;
   }
-  
+
   .card-servicio {
     border-radius: 8px;
   }
