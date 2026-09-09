@@ -363,24 +363,24 @@
 
                 <!-- Botones de Acción -->
                 <q-card-actions vertical class="q-pa-md">
-                  <q-btn
-                    outline
-                    color="teal-8"
-                    icon="edit"
-                    label="Editar"
-                    @click="editarServicio(s)"
-                    class="full-width"
-                    :disable="s.estadoEquipo === 'Entregado'"
-                  />
-                  <q-btn
-                    outline
-                    color="negative"
-                    icon="delete"
-                    label="Eliminar"
-                    @click="confirmarEliminar(s.id)"
-                    class="full-width"
-                    :disable="s.estadoEquipo === 'Entregado'"
-                  />
+                  <template v-if="s.estadoEquipo !== 'Entregado'">
+                    <q-btn
+                      outline
+                      color="teal-8"
+                      icon="edit"
+                      label="Editar"
+                      @click="editarServicio(s)"
+                      class="full-width"
+                    />
+                    <q-btn
+                      outline
+                      color="negative"
+                      icon="delete"
+                      label="Eliminar"
+                      @click="confirmarEliminar(s.id)"
+                      class="full-width"
+                    />
+                  </template>
                   <div
                     v-if="s.estadoEquipo === 'Entregado'"
                     class="text-caption text-grey-6 text-center"
@@ -449,9 +449,7 @@
                   outlined
                   dense
                   :options="marcas"
-                  behavior="dialog"
-                  menu-anchor="bottom middle"
-                  menu-self="top middle"
+                  class="select-marca"
                   :rules="[(val) => !!val || 'Seleccione la marca']"
                 />
 
@@ -537,25 +535,12 @@
                   <div class="col-6">
                     <q-input
                       v-model="servicio.fecha"
-                      label="Fecha de recepción *"
+                      label="Fecha de recepción (automática) *"
                       outlined
                       dense
-                      mask="####-##-##"
-                      :rules="[
-                        (val) => !!val || 'Elija la fecha',
-                        (val) =>
-                          /^\d{4}-\d{2}-\d{2}$/.test(val || '') ||
-                          'Formato: AAAA-MM-DD',
-                      ]"
-                    >
-                      <template v-slot:append>
-                        <q-icon
-                          name="event"
-                          class="cursor-pointer"
-                          @click="mostrarCalendario = true"
-                        />
-                      </template>
-                    </q-input>
+                      readonly
+                      :rules="[(val) => !!val || 'Elija la fecha']"
+                    />
                   </div>
                   <div class="col-6">
                     <q-input
@@ -577,15 +562,6 @@
                   </div>
                 </div>
 
-                <q-dialog v-model="mostrarCalendario">
-                  <q-date
-                    v-model="servicio.fecha"
-                    mask="YYYY-MM-DD"
-                    color="teal-8"
-                    @update:model-value="mostrarCalendario = false"
-                  />
-                </q-dialog>
-
                 <q-dialog v-model="mostrarReloj">
                   <q-time
                     v-model="servicio.hora"
@@ -597,19 +573,20 @@
                 </q-dialog>
 
                 <q-input
-                  v-model.number="servicio.precio"
+                  :model-value="formatearDinero(servicio.precio)"
+                  @update:model-value="alEscribirPrecio($event, 'precio')"
                   label="Precio cobrado *"
-                  type="number"
                   outlined
                   dense
                   prefix="$"
                   lazy-rules
                   :rules="[
+                    (val) => numeroDe(val) !== null || 'Escriba el precio',
                     (val) =>
-                      (val !== null && val !== '') || 'Escriba el precio',
-                    (val) => val > 0 || 'El precio debe ser mayor a $0',
+                      numeroDe(val) > 0 || 'El precio debe ser mayor a $0',
                     (val) =>
-                      val <= 5000000 || 'Verifique el precio, parece muy alto',
+                      numeroDe(val) <= 5000000 ||
+                      'Verifique el precio, parece muy alto',
                   ]"
                 />
 
@@ -634,20 +611,20 @@
 
                 <q-input
                   v-if="servicio.estadoPago === 'Abono'"
-                  v-model.number="servicio.abono"
+                  :model-value="formatearDinero(servicio.abono)"
+                  @update:model-value="alEscribirPrecio($event, 'abono')"
                   label="Valor del abono *"
-                  type="number"
                   outlined
                   dense
                   prefix="$"
                   lazy-rules
                   :rules="[
                     (val) =>
-                      (val !== null && val !== '') ||
-                      'Escriba el valor del abono',
-                    (val) => val > 0 || 'El abono debe ser mayor a $0',
+                      numeroDe(val) !== null || 'Escriba el valor del abono',
                     (val) =>
-                      val < servicio.precio ||
+                      numeroDe(val) > 0 || 'El abono debe ser mayor a $0',
+                    (val) =>
+                      numeroDe(val) < servicio.precio ||
                       'El abono debe ser menor al precio total',
                   ]"
                 />
@@ -786,7 +763,6 @@ const servicios = useLocalStorage("servicios", []);
 
 /* ===== ESTADO DE LA INTERFAZ ===== */
 const mostrarModal = ref(false);
-const mostrarCalendario = ref(false);
 const mostrarReloj = ref(false);
 const mostrarConfirmacionEliminar = ref(false);
 const idEditando = ref(null);
@@ -798,7 +774,6 @@ const filtroEstado = ref("Todos");
 const marcas = [
   "Samsung",
   "Apple",
-  "Xiaomi",
   "Redmi",
   "Huawei",
   "Motorola",
@@ -807,9 +782,7 @@ const marcas = [
   "ZTE",
   "Oppo",
   "Realme",
-  "LG",
   "Sony",
-  "Honor",
   "Otra",
 ];
 
@@ -1092,6 +1065,21 @@ function formatearDinero(valor) {
   }
   return formatoMoneda.format(numero);
 }
+
+/* Convierte texto con separadores (1.250.000) a número: 1250000 */
+function numeroDe(valor) {
+  if (valor === null || valor === undefined || valor === "") {
+    return null;
+  }
+  const n = Number(String(valor).replace(/[^\d]/g, ""));
+  return isNaN(n) ? null : n;
+}
+
+/* Al escribir en los campos de dinero se guarda el número limpio;
+   la vista lo muestra formateado con separadores de miles */
+function alEscribirPrecio(valor, campo) {
+  servicio.value[campo] = numeroDe(valor);
+}
 function fechaDeHoy() {
   const hoy = new Date();
   const mes = String(hoy.getMonth() + 1).padStart(2, "0");
@@ -1119,6 +1107,28 @@ function formatearFecha(fecha) {
 /* Evita que el scroll del menú de opciones arrastre al modal de atrás */
 .q-menu {
   overscroll-behavior: contain;
+}
+
+/* Menú de marcas: compacto y con barra de scroll delgada */
+.q-menu {
+  max-height: 240px;
+}
+
+.q-menu::-webkit-scrollbar,
+.q-menu ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.q-menu::-webkit-scrollbar-thumb,
+.q-menu ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 3px;
+}
+
+.q-menu::-webkit-scrollbar-track,
+.q-menu ::-webkit-scrollbar-track {
+  background: transparent;
 }
 </style>
 
