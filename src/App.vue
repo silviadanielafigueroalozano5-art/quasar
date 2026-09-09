@@ -224,9 +224,9 @@
                   <div class="row q-col-gutter-md">
                     <div class="col-6">
                       <div class="text-caption text-grey-8 text-weight-bold">
-                        REPARACIÓN
+                        REPARACIÓN(ES)
                       </div>
-                      <div class="text-body2">{{ s.reparacion }}</div>
+                      <div class="text-body2">{{ reparacionesTexto(s) }}</div>
                     </div>
                     <div class="col-6">
                       <div class="text-caption text-grey-8 text-weight-bold">
@@ -370,6 +370,7 @@
                     label="Editar"
                     @click="editarServicio(s)"
                     class="full-width"
+                    :disable="s.estadoEquipo === 'Entregado'"
                   />
                   <q-btn
                     outline
@@ -378,7 +379,15 @@
                     label="Eliminar"
                     @click="confirmarEliminar(s.id)"
                     class="full-width"
+                    :disable="s.estadoEquipo === 'Entregado'"
                   />
+                  <div
+                    v-if="s.estadoEquipo === 'Entregado'"
+                    class="text-caption text-grey-6 text-center"
+                  >
+                    <q-icon name="lock" size="14px" />
+                    Equipo entregado: registro bloqueado
+                  </div>
                 </q-card-actions>
               </q-card>
             </div>
@@ -470,11 +479,13 @@
 
                 <q-select
                   v-model="servicio.reparacion"
-                  label="Tipo de reparación *"
+                  label="Tipo(s) de reparación *"
                   outlined
                   dense
+                  multiple
                   emit-value
                   map-options
+                  use-chips
                   :options="[
                     'Cambio de pantalla',
                     'Cambio de batería',
@@ -485,7 +496,9 @@
                     'Otros',
                   ]"
                   :rules="[
-                    (val) => !!val || 'Seleccione el tipo de reparación',
+                    (val) =>
+                      (Array.isArray(val) && val.length > 0) ||
+                      'Seleccione al menos una reparación',
                   ]"
                 />
 
@@ -505,8 +518,13 @@
                       label="Fecha de recepción *"
                       outlined
                       dense
-                      readonly
-                      :rules="[(val) => !!val || 'Elija la fecha']"
+                      mask="####-##-##"
+                      :rules="[
+                        (val) => !!val || 'Elija la fecha',
+                        (val) =>
+                          /^\d{4}-\d{2}-\d{2}$/.test(val || '') ||
+                          'Formato: AAAA-MM-DD',
+                      ]"
                     >
                       <template v-slot:append>
                         <q-icon
@@ -617,12 +635,7 @@
                   label="Estado del equipo *"
                   outlined
                   dense
-                  :options="[
-                    'Recibido',
-                    'En reparación',
-                    'Listo para entregar',
-                    'Entregado',
-                  ]"
+                  :options="estadosDisponibles"
                   :rules="[(val) => !!val || 'Seleccione el estado del equipo']"
                   @update:model-value="alCambiarEstadoEquipo()"
                 />
@@ -739,8 +752,12 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useQuasar } from "quasar";
 import { useLocalStorage } from "@vueuse/core";
+
+/* ===== NOTIFICACIONES ===== */
+const $q = useQuasar();
 
 /* ===== DATOS PERSISTENTES ===== */
 const servicios = useLocalStorage("servicios", []);
@@ -778,6 +795,21 @@ const marcas = [
 const servicio = ref(nuevoServicioVacio());
 const mostrarCalificacion = ref(false);
 const calificacionTemporal = ref(0);
+let estadoEquipoAnterior = "Recibido";
+
+const TODOS_LOS_ESTADOS = [
+  "Recibido",
+  "En reparación",
+  "Listo para entregar",
+  "Entregado",
+];
+
+/* Un registro nuevo no puede entregarse de una vez: solo después de editarlo */
+const estadosDisponibles = computed(() =>
+  idEditando.value === null
+    ? TODOS_LOS_ESTADOS.filter((e) => e !== "Entregado")
+    : TODOS_LOS_ESTADOS
+);
 
 function nuevoServicioVacio() {
   return {
@@ -786,7 +818,7 @@ function nuevoServicioVacio() {
     marca: "",
     marcaOtra: "",
     modelo: "",
-    reparacion: "",
+    reparacion: [],
     tecnico: "",
     fecha: "",
     hora: "",
@@ -806,6 +838,7 @@ function abrirNuevoServicio() {
   servicio.value.fecha = fechaDeHoy();
   servicio.value.hora = horaActual();
   idEditando.value = null;
+  estadoEquipoAnterior = servicio.value.estadoEquipo;
   mostrarModal.value = true;
 }
 
@@ -817,6 +850,19 @@ function cerrarModal() {
 
 /* ===== CRUD ===== */
 function guardarServicio() {
+  // No se puede entregar si el pago no está completo
+  if (
+    servicio.value.estadoEquipo === "Entregado" &&
+    servicio.value.estadoPago !== "Pagado"
+  ) {
+    $q.notify({
+      type: "negative",
+      message:
+        "No se puede entregar el equipo: el pago no está completo (solo con estado 'Pagado').",
+    });
+    servicio.value.estadoEquipo = estadoEquipoAnterior;
+    return;
+  }
   if (idEditando.value === null) {
     servicios.value.push({ ...servicio.value, id: Date.now() });
   } else {
@@ -827,12 +873,28 @@ function guardarServicio() {
 }
 
 function editarServicio(servicioGuardado) {
-  servicio.value = { ...servicioGuardado };
+  const copia = { ...servicioGuardado };
+  // Compatibilidad con registros antiguos: reparación única -> lista
+  copia.reparacion = Array.isArray(copia.reparacion)
+    ? copia.reparacion
+    : copia.reparacion
+    ? [copia.reparacion]
+    : [];
+  servicio.value = copia;
   idEditando.value = servicioGuardado.id;
+  estadoEquipoAnterior = servicio.value.estadoEquipo;
   mostrarModal.value = true;
 }
 
 function confirmarEliminar(id) {
+  const registro = servicios.value.find((s) => s.id === id);
+  if (registro && registro.estadoEquipo === "Entregado") {
+    $q.notify({
+      type: "warning",
+      message: "No se puede eliminar un servicio ya entregado (historial).",
+    });
+    return;
+  }
   idEliminar.value = id;
   mostrarConfirmacionEliminar.value = true;
 }
@@ -851,12 +913,26 @@ function alCambiarEstadoPago() {
 }
 
 function alCambiarEstadoEquipo() {
+  // No permitir entregar si el pago está pendiente o solo abonado
+  if (
+    servicio.value.estadoEquipo === "Entregado" &&
+    servicio.value.estadoPago !== "Pagado"
+  ) {
+    servicio.value.estadoEquipo = estadoEquipoAnterior;
+    $q.notify({
+      type: "warning",
+      message:
+        "El pago no está completo. Pase el estado a 'Pagado' antes de entregar.",
+    });
+    return;
+  }
   if (servicio.value.estadoEquipo === "Entregado") {
     calificacionTemporal.value = servicio.value.calificacion || 0;
     mostrarCalificacion.value = true;
   } else {
     servicio.value.calificacion = 0;
   }
+  estadoEquipoAnterior = servicio.value.estadoEquipo;
 }
 
 function guardarCalificacion(conNota) {
@@ -877,6 +953,13 @@ function seMuestra(s) {
     filtroEstado.value === "Todos" || s.estadoEquipo === filtroEstado.value;
 
   return coincideTexto && coincideEstado;
+}
+
+function reparacionesTexto(s) {
+  if (Array.isArray(s.reparacion)) {
+    return s.reparacion.join(", ") || "Sin reparación";
+  }
+  return s.reparacion || "Sin reparación";
 }
 
 function marcaFinal(s) {
