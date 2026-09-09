@@ -113,7 +113,7 @@
                       class="q-mb-md text-green-8"
                     />
                     <div class="text-h4 text-weight-bold">
-                      ${{ totalRecaudado() }}
+                      ${{ formatearDinero(totalRecaudado()) }}
                     </div>
                     <div class="text-subtitle2">Recaudado</div>
                   </div>
@@ -263,7 +263,7 @@
                       PRECIO
                     </div>
                     <div class="text-h5 text-weight-bold text-teal-8">
-                      ${{ s.precio }}
+                      ${{ formatearDinero(s.precio) }}
                     </div>
                     <div class="text-caption text-grey-7">
                       {{ s.metodoPago }}
@@ -304,7 +304,7 @@
                         color="orange-8"
                         text-color="white"
                         icon="savings"
-                        :label="'Abonó $' + s.abono"
+                        :label="'Abonó $' + formatearDinero(s.abono)"
                       />
                     </div>
                   </div>
@@ -312,7 +312,7 @@
                     v-if="s.estadoPago === 'Abono'"
                     class="text-caption text-orange-9 q-mt-xs"
                   >
-                    ↳ Falta: ${{ s.precio - s.abono }}
+                    ↳ Falta: ${{ formatearDinero(s.precio - s.abono) }}
                   </div>
                 </q-card-section>
 
@@ -422,11 +422,15 @@
                   outlined
                   dense
                   lazy-rules
+                  @update:model-value="limpiarNombreCliente()"
                   :rules="[
                     (val) =>
                       (val && val.trim().length > 0) ||
                       'Escriba el nombre del cliente',
                     (val) => val.trim().length >= 3 || 'Mínimo 3 caracteres',
+                    (val) =>
+                      !/\d/.test(val || '') ||
+                      'El nombre no puede contener números',
                   ]"
                 />
 
@@ -928,6 +932,14 @@ function eliminarServicio() {
 }
 
 /* ===== REGLAS DEPENDIENTES ===== */
+/* El nombre del cliente no admite números: se eliminan al escribir */
+function limpiarNombreCliente() {
+  const limpio = (servicio.value.cliente || "").replace(/[0-9]/g, "");
+  if (limpio !== servicio.value.cliente) {
+    servicio.value.cliente = limpio;
+  }
+}
+
 function alCambiarEstadoPago() {
   if (servicio.value.estadoPago !== "Abono") {
     servicio.value.abono = null;
@@ -1068,6 +1080,18 @@ function colorEstadoEquipo(estado) {
 }
 
 /* ===== FECHAS ===== */
+const formatoMoneda = new Intl.NumberFormat("es-CO", {
+  maximumFractionDigits: 0,
+});
+
+/* Formatea dinero con separadores de miles: 1250000 -> 1.250.000 */
+function formatearDinero(valor) {
+  const numero = Number(valor);
+  if (valor === null || valor === undefined || valor === "" || isNaN(numero)) {
+    return String(valor ?? "");
+  }
+  return formatoMoneda.format(numero);
+}
 function fechaDeHoy() {
   const hoy = new Date();
   const mes = String(hoy.getMonth() + 1).padStart(2, "0");
