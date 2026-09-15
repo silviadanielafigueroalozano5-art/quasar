@@ -1,27 +1,45 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <!-- ===== ENCABEZADO MEJORADO ===== -->
-    <q-header elevated class="bg-gradient text-white">
-      <q-toolbar class="q-py-md">
-        <q-icon name="smartphone" size="32px" class="q-mr-sm" />
+    <!-- ===== ENCABEZADO PROFESIONAL ===== -->
+    <q-header elevated class="header-pro text-white">
+      <q-toolbar class="q-py-sm header-toolbar">
+        <q-avatar size="48px" class="logo-pro q-mr-md">
+          <q-icon name="build" size="26px" />
+          <span class="logo-pro-punto"></span>
+        </q-avatar>
+        <q-separator vertical dark class="header-sep q-mr-md gt-xs" />
         <div>
-          <div class="text-h5 text-weight-bold">
-            Servicio Técnico Don Efraín
+          <div class="text-h5 text-weight-medium titulo-pro">
+            Servicio Técnico <span class="text-weight-bold">Don Efraín</span>
           </div>
-          <div class="text-caption text-grey-3">
+          <div class="text-caption header-subtitulo">
+            <q-icon name="phone_iphone" size="12px" class="q-mr-xs" />
             Gestión de equipos en reparación
           </div>
         </div>
         <q-space />
         <q-btn
+          unelevated
+          no-caps
+          color="white"
+          text-color="teal-10"
+          icon="add_circle"
+          label="Nuevo servicio"
+          size="md"
+          @click="abrirNuevoServicio()"
+          class="btn-nuevo gt-xs q-px-lg"
+        >
+          <q-tooltip>Registrar nuevo servicio</q-tooltip>
+        </q-btn>
+        <q-btn
           round
           unelevated
           color="white"
-          text-color="teal-9"
-          icon="add_circle"
-          size="lg"
+          text-color="teal-10"
+          icon="add"
+          size="md"
           @click="abrirNuevoServicio()"
-          class="q-mr-sm"
+          class="xs q-ml-sm"
         >
           <q-tooltip>Registrar nuevo servicio</q-tooltip>
         </q-btn>
@@ -34,19 +52,17 @@
           <!-- ===== RESUMEN RÁPIDO MEJORADO ===== -->
           <div class="row q-col-gutter-lg q-mb-xl">
             <!-- Tarjeta Total de Servicios -->
-            <div class="col-12 col-sm-6 col-md-3">
+            <div class="col-12 col-sm-6 col-md-3 animar-entrada">
               <q-card
                 flat
                 class="card-resumen bg-teal-1 text-teal-9 shadow-hover"
               >
                 <q-card-section class="q-pt-lg">
                   <div class="text-center">
-                    <q-icon
-                      name="folder_open"
-                      size="40px"
-                      class="q-mb-md text-teal-8"
-                    />
-                    <div class="text-h4 text-weight-bold">
+                    <q-avatar class="icono-resumen" size="56px">
+                      <q-icon name="folder_open" size="28px" />
+                    </q-avatar>
+                    <div class="text-h4 text-weight-bold q-mt-md">
                       {{ servicios.length }}
                     </div>
                     <div class="text-subtitle2">Total de Servicios</div>
@@ -56,19 +72,17 @@
             </div>
 
             <!-- Tarjeta Sin Entregar -->
-            <div class="col-12 col-sm-6 col-md-3">
+            <div class="col-12 col-sm-6 col-md-3 animar-entrada">
               <q-card
                 flat
                 class="card-resumen bg-orange-1 text-orange-9 shadow-hover"
               >
                 <q-card-section class="q-pt-lg">
                   <div class="text-center">
-                    <q-icon
-                      name="schedule"
-                      size="40px"
-                      class="q-mb-md text-orange-8"
-                    />
-                    <div class="text-h4 text-weight-bold">
+                    <q-avatar class="icono-resumen" size="56px">
+                      <q-icon name="schedule" size="28px" />
+                    </q-avatar>
+                    <div class="text-h4 text-weight-bold q-mt-md">
                       {{ contarSinEntregar() }}
                     </div>
                     <div class="text-subtitle2">Sin Entregar</div>
@@ -78,19 +92,17 @@
             </div>
 
             <!-- Tarjeta Pagos Pendientes -->
-            <div class="col-12 col-sm-6 col-md-3">
+            <div class="col-12 col-sm-6 col-md-3 animar-entrada">
               <q-card
                 flat
                 class="card-resumen bg-red-1 text-red-9 shadow-hover"
               >
                 <q-card-section class="q-pt-lg">
                   <div class="text-center">
-                    <q-icon
-                      name="warning"
-                      size="40px"
-                      class="q-mb-md text-red-8"
-                    />
-                    <div class="text-h4 text-weight-bold">
+                    <q-avatar class="icono-resumen" size="56px">
+                      <q-icon name="warning" size="28px" />
+                    </q-avatar>
+                    <div class="text-h4 text-weight-bold q-mt-md">
                       {{ contarPagoPendiente() }}
                     </div>
                     <div class="text-subtitle2">Pagos Pendientes</div>
@@ -100,19 +112,17 @@
             </div>
 
             <!-- Tarjeta Recaudado -->
-            <div class="col-12 col-sm-6 col-md-3">
+            <div class="col-12 col-sm-6 col-md-3 animar-entrada">
               <q-card
                 flat
                 class="card-resumen bg-green-1 text-green-9 shadow-hover"
               >
                 <q-card-section class="q-pt-lg">
                   <div class="text-center">
-                    <q-icon
-                      name="trending_up"
-                      size="40px"
-                      class="q-mb-md text-green-8"
-                    />
-                    <div class="text-h4 text-weight-bold">
+                    <q-avatar class="icono-resumen" size="56px">
+                      <q-icon name="trending_up" size="28px" />
+                    </q-avatar>
+                    <div class="text-h4 text-weight-bold q-mt-md">
                       ${{ formatearDinero(totalRecaudado()) }}
                     </div>
                     <div class="text-subtitle2">Recaudado</div>
@@ -125,7 +135,7 @@
           <!-- ===== BUSCADOR Y FILTRO MEJORADO ===== -->
           <div class="q-mb-xl">
             <q-card flat class="shadow-1">
-              <q-card-section class="q-pa-lg">
+            <q-card-section class="q-pa-lg">
                 <div class="row q-col-gutter-md">
                   <div class="col-12 col-md-8">
                     <q-input
@@ -168,7 +178,9 @@
             class="q-pa-xl text-center text-grey-7 shadow-1"
           >
             <q-icon name="inbox" size="64px" class="q-mb-md text-grey-5" />
-            <div class="text-h6">Todavía no hay servicios registrados</div>
+            <div class="text-h6 text-weight-medium">
+              Todavía no hay servicios registrados
+            </div>
             <div class="text-subtitle2 q-mt-sm">
               Toque el botón + para registrar el primer equipo
             </div>
@@ -179,7 +191,7 @@
             <div
               v-for="s in servicios"
               :key="s.id"
-              class="col-12 col-sm-6 col-lg-4"
+              class="col-12 col-sm-6 col-lg-4 animar-entrada"
               v-show="seMuestra(s)"
             >
               <q-card
@@ -258,7 +270,7 @@
 
                   <!-- Precio destacado -->
                   <q-separator class="q-my-md" />
-                  <div class="text-center q-py-sm bg-grey-1 rounded-borders">
+                  <div class="text-center q-py-sm bg-grey-1 rounded-borders precio-destacado">
                     <div class="text-caption text-grey-8 text-weight-bold">
                       PRECIO
                     </div>
@@ -366,6 +378,7 @@
                   <template v-if="s.estadoEquipo !== 'Entregado'">
                     <q-btn
                       outline
+                      no-caps
                       color="teal-8"
                       icon="edit"
                       label="Editar"
@@ -374,6 +387,7 @@
                     />
                     <q-btn
                       outline
+                      no-caps
                       color="negative"
                       icon="delete"
                       label="Eliminar"
@@ -545,32 +559,14 @@
                   <div class="col-6">
                     <q-input
                       v-model="servicio.hora"
-                      label="Hora de recepción *"
+                      label="Hora de recepción (automática) *"
                       outlined
                       dense
                       readonly
                       :rules="[(val) => !!val || 'Elija la hora']"
-                    >
-                      <template v-slot:append>
-                        <q-icon
-                          name="access_time"
-                          class="cursor-pointer"
-                          @click="mostrarReloj = true"
-                        />
-                      </template>
-                    </q-input>
+                    />
                   </div>
                 </div>
-
-                <q-dialog v-model="mostrarReloj">
-                  <q-time
-                    v-model="servicio.hora"
-                    mask="HH:mm"
-                    format24h
-                    color="teal-8"
-                    @update:model-value="mostrarReloj = false"
-                  />
-                </q-dialog>
 
                 <q-input
                   :model-value="formatearDinero(servicio.precio)"
@@ -1104,6 +1100,147 @@ function formatearFecha(fecha) {
 </script>
 
 <style>
+/* ===== TIPOGRAFÍA PREMIUM ===== */
+body,
+.q-app,
+.q-layout {
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI",
+    Roboto, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Fondo claro uniforme: elimina franjas oscuras del body */
+body {
+  background: #f2f9f7 !important;
+  color-scheme: light;
+}
+
+#app {
+  background: #f2f9f7;
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgba(0, 191, 165, 0.25);
+}
+
+/* ===== SCROLLBAR GLOBAL ELEGANTE ===== */
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: rgba(11, 79, 69, 0.3);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: rgba(11, 79, 69, 0.5);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
+/* ===== INPUTS REFINADOS ===== */
+.q-field .q-field__control {
+  border-radius: 12px;
+  transition: box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.q-field--outlined .q-field__control {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.q-field--outlined .q-field__control:before {
+  border: 1.5px solid rgba(0, 0, 0, 0.14);
+  transition: border-color 0.25s ease;
+}
+
+.q-field--outlined:hover .q-field__control:before {
+  border-color: rgba(0, 105, 92, 0.5);
+}
+
+.q-field--focused .q-field__control {
+  box-shadow: 0 0 0 4px rgba(0, 191, 165, 0.12);
+  background: #ffffff;
+}
+
+.q-field__label {
+  font-weight: 500;
+}
+
+/* ===== BOTONES REFINADOS ===== */
+.q-btn {
+  border-radius: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.q-btn--rectangle.q-btn--outline {
+  transition: all 0.22s ease;
+}
+
+.q-btn--rectangle.q-btn--outline:hover {
+  transform: translateY(-1px);
+}
+
+.q-btn--round {
+  border-radius: 50%;
+}
+
+/* ===== TARJETAS Y CONTENEDORES ===== */
+.q-card {
+  border-radius: 18px;
+}
+
+.q-dialog .q-card {
+  border-radius: 20px !important;
+  box-shadow: 0 24px 60px rgba(3, 40, 34, 0.28),
+    0 4px 16px rgba(3, 40, 34, 0.12) !important;
+  overflow: hidden;
+}
+
+.q-dialog__backdrop {
+  background: rgba(0, 0, 0, 0.28) !important;
+}
+
+/* ===== CHIPS Y BADGES ===== */
+.q-chip {
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.q-badge {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  border-radius: 8px;
+}
+
+/* ===== SELECTS Y MENÚS ===== */
+.q-menu {
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.16),
+    0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 6px;
+}
+
+.q-menu .q-item {
+  border-radius: 9px;
+  min-height: 38px;
+  transition: background 0.15s ease;
+}
+
+.q-menu .q-item.q-item--active,
+.q-menu .q-item[aria-active="true"] {
+  background: rgba(0, 191, 165, 0.12);
+  color: #0b4f45;
+  font-weight: 600;
+}
+
 /* Evita que el scroll del menú de opciones arrastre al modal de atrás */
 .q-menu {
   overscroll-behavior: contain;
@@ -1122,61 +1259,219 @@ function formatearFecha(fecha) {
 
 .q-menu::-webkit-scrollbar-thumb,
 .q-menu ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.25);
-  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.22);
+  border-radius: 6px;
 }
 
 .q-menu::-webkit-scrollbar-track,
 .q-menu ::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/* ===== ANIMACIÓN DE ENTRADA DE TARJETAS ===== */
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animar-entrada {
+  animation: aparecer 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
 </style>
 
 <style scoped>
-/* ===== GRADIENTES ===== */
-.bg-gradient {
-  background: linear-gradient(135deg, #0d5c4f 0%, #1d7a6f 100%);
+/* ===== ENCABEZADO PROFESIONAL ===== */
+.header-pro {
+  background: linear-gradient(100deg, #062e29 0%, #0b4f45 45%, #116a5c 100%);
+  box-shadow: 0 3px 18px rgba(3, 40, 34, 0.45) !important;
+  border-bottom: 1px solid rgba(0, 191, 165, 0.55);
+  position: relative;
+}
+
+/* Línea de acento luminosa en la base */
+.header-pro::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    #00bfa5 0%,
+    #4ddfc0 30%,
+    rgba(0, 191, 165, 0.25) 70%,
+    transparent 100%
+  );
+}
+
+.header-toolbar {
+  min-height: 76px;
+}
+
+.logo-pro {
+  background: linear-gradient(135deg, #00bfa5 0%, #26a69a 100%);
+  box-shadow: 0 4px 12px rgba(0, 191, 165, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.logo-pro-punto {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #ffca28;
+  border: 2px solid #0b4f45;
+}
+
+.header-sep {
+  height: 40px;
+  opacity: 0.35;
+}
+
+.titulo-pro {
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+}
+
+.titulo-pro span {
+  color: #4ddfc0;
+}
+
+.header-subtitulo {
+  opacity: 0.75;
+  letter-spacing: 0.4px;
+  display: flex;
+  align-items: center;
+}
+
+.btn-nuevo {
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: all 0.25s ease;
+}
+
+.btn-nuevo:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
 }
 
 .bg-gradient-light {
-  background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
+  background:
+    radial-gradient(1100px 480px at 8% -4%, rgba(0, 191, 165, 0.08), transparent 60%),
+    radial-gradient(1000px 500px at 100% 0%, rgba(38, 166, 154, 0.07), transparent 55%),
+    linear-gradient(180deg, #f2f9f7 0%, #f7fafc 45%, #eef3f8 100%);
+  min-height: 100vh;
 }
 
-/* ===== TARJETAS ===== */
+/* ===== TARJETAS RESUMEN ===== */
 .card-resumen {
-  border-radius: 16px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 2px solid transparent;
+  border-radius: 18px;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(15, 60, 55, 0.07);
+}
+
+/* Barra de acento superior según el color de fondo de cada tarjeta */
+.card-resumen::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: currentColor;
+  opacity: 0.85;
+}
+
+/* Brillo diagonal decorativo */
+.card-resumen::after {
+  content: "";
+  position: absolute;
+  top: -60%;
+  right: -25%;
+  width: 55%;
+  height: 160%;
+  background: linear-gradient(
+    115deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 60%
+  );
+  transform: rotate(0.01deg);
+  pointer-events: none;
 }
 
 .card-resumen:hover {
-  transform: translateY(-8px);
-  border-color: currentColor;
+  transform: translateY(-6px);
+  box-shadow: 0 18px 36px rgba(10, 60, 52, 0.14),
+    0 4px 12px rgba(10, 60, 52, 0.08) !important;
 }
 
+.icono-resumen {
+  border-radius: 50%;
+  background: currentColor;
+  color: inherit;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.icono-resumen .q-icon {
+  color: #ffffff;
+}
+
+.card-resumen:hover .icono-resumen {
+  transform: scale(1.08) rotate(-4deg);
+}
+
+/* ===== TARJETAS DE SERVICIO ===== */
 .card-servicio {
-  border-radius: 12px;
+  border-radius: 18px;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #e0e0e0;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.28s ease, border-color 0.28s ease;
+  border: 1px solid rgba(0, 0, 0, 0.07);
 }
 
 .card-servicio:hover {
-  transform: translateY(-6px) scale(1.02);
-  border-color: #0d5c4f;
+  transform: translateY(-5px);
+  border-color: rgba(0, 191, 165, 0.55);
+  box-shadow: 0 18px 38px rgba(0, 60, 50, 0.15),
+    0 4px 12px rgba(0, 60, 50, 0.07) !important;
+}
+
+.precio-destacado {
+  border-radius: 14px;
+  border: 1px solid rgba(0, 105, 92, 0.16);
+  background: linear-gradient(160deg, #f4fbf9 0%, #ecf5f2 100%) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .shadow-hover {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(15, 60, 55, 0.08);
   transition: box-shadow 0.3s ease;
 }
 
-.shadow-hover:hover {
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-}
-
 .shadow-1 {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 10px rgba(15, 60, 55, 0.07);
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
 }
 
 /* ===== BÚSQUEDA ===== */
@@ -1185,7 +1480,12 @@ function formatearFecha(fecha) {
 }
 
 .search-input:focus-within {
-  box-shadow: 0 0 0 3px rgba(13, 92, 79, 0.1);
+  box-shadow: 0 0 0 4px rgba(0, 191, 165, 0.14);
+  border-radius: 12px;
+}
+
+.search-input .q-field__control {
+  min-height: 44px;
 }
 
 /* ===== BORDES LATERALES ===== */
@@ -1213,7 +1513,15 @@ function formatearFecha(fecha) {
   }
 
   .card-servicio {
-    border-radius: 8px;
+    border-radius: 10px;
+  }
+
+  .card-resumen:hover {
+    transform: none;
+  }
+
+  .card-servicio:hover {
+    transform: none;
   }
 }
 </style>

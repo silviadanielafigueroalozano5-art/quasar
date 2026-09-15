@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+dev_err.txt
+dev_out.txt
+vite_out.txt
